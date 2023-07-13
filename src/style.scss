@@ -1,0 +1,9 @@
+@import './styles/vars';
+
+body {
+    color: $text;
+    background: $main;
+    font-family: sans-serif;
+}
+
+@import './components/app/app'
