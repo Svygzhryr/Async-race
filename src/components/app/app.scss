@@ -30,3 +30,7 @@ body {
 .btn_winners {
     color: $alt-active;
 }
+
+@import './garage/garage.scss';
+@import './winners/winners.scss';
+

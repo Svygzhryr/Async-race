@@ -1,0 +1,45 @@
+form {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn_garage-menu {
+    height: 30px;
+    background-color: $alt;
+
+    color: $text;
+
+    margin: 0 10px;
+
+    border: none;
+}
+
+.garage__input {
+    background-color: $alt;
+    color: $text;
+
+    font-size: 20px;
+
+    height: 30px;
+    margin: 0 10px;
+    border: none;
+}
+
+.garage__color {
+    background-color: $text;
+
+    height: 30px;
+
+    margin: 0 10px;
+    border: none;
+
+    transition: all .2s ease-in-out;
+
+    &:hover {
+        background-color: $active;
+        cursor: pointer;
+    }
+
+}

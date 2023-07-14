@@ -1,10 +1,21 @@
 export default class Winners {
-    constructor() {}
+    app: Element | null;
+    menu: Element | null;
+    constructor() {
+        this.app = document.querySelector('.app');
+        this.menu = document.querySelector('.menu');
+    }
 
     setUp() {
         const winners = document.createElement('button');
         winners.className = 'btn_winners btn';
         winners.innerHTML = 'Winners';
-        document.querySelector('.app')?.appendChild(winners);
+        this.menu?.appendChild(winners);
+    }
+
+    winnersView() {
+        const winnersUi = document.createElement('div');
+        winnersUi.className = 'winners-wrapper';
+        this.app?.appendChild(winnersUi);
     }
 }

@@ -9,6 +9,10 @@ class App {
         app.className = 'app';
         document.body.appendChild(app);
 
+        const menu = document.createElement('div');
+        menu.className = 'menu';
+        app.appendChild(menu);
+
         const garage = new Garage();
         const winners = new Winners();
         garage.setUp();
