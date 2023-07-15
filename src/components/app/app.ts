@@ -17,6 +17,8 @@ class App {
         const winners = new Winners();
         garage.setUp();
         winners.setUp();
+
+        console.log('this is garage', garage.garageUi);
     }
 }
 

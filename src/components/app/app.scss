@@ -35,6 +35,10 @@ body {
     color: $alt-active;
 }
 
+.inactive {
+    display: none;
+}
+
 @import './garage/garage.scss';
 @import './winners/winners.scss';
 
