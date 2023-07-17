@@ -69,6 +69,8 @@ export default class Garage {
             title.className = 'garage__title';
             title.innerHTML = 'Garage';
             this.garageUi.appendChild(title);
+
+            this.getCars(title);
         }
     }
 
@@ -77,5 +79,22 @@ export default class Garage {
         const getWinners = document.querySelector('.winners-wrapper');
         getGarage?.classList.remove('inactive');
         getWinners?.classList.add('inactive');
+    }
+
+    async getCars(title: Element) {
+        const page = document.createElement('h3');
+
+        this.garageUi?.appendChild(page);
+        const response = await fetch('http://127.0.0.1:3000/garage?_page=1&_limit=7', {
+            method: 'GET',
+        });
+        const cars = await response.json();
+        const items = await response.headers.get('X-Total-Count');
+
+        page.innerHTML = `Page: 1`;
+        title.innerHTML = `Garage (${items})`;
+
+        console.log(cars);
+        console.log(items);
     }
 }

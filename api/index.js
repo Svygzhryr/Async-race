@@ -22,6 +22,26 @@ const db = {
             "color": "#ef3c40",
             "id": 4,
         },
+        {
+            "name": "Porsche",
+            "color": "#e006fa",
+            "id": 5,
+        },
+        {
+            "name": "Audi",
+            "color": "#00Fe00",
+            "id": 6,
+        },
+        {
+            "name": "Honda",
+            "color": "#6FF79f",
+            "id": 7,
+        },
+        {
+            "name": "Mitsubishi",
+            "color": "#0f0c40",
+            "id": 8,
+        },
     ],
     winners: [
         {
