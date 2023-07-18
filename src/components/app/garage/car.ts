@@ -8,12 +8,16 @@ export default class CarItem {
     }
 
     initCar(garageUi: Element) {
-        const carImg = document.createElement('img');
-        carImg.setAttribute('src', image);
+        const carItem = document.createElement('div');
+        carItem.className = 'garage__item';
+        carItem.innerHTML = this.carData.name;
+        garageUi.appendChild(carItem);
+        const carImg = document.createElement('div');
+        carImg.innerHTML = image;
         carImg.className = 'car';
-        console.log(this.carData.color);
+        console.log(carImg.querySelector('svg'));
         carImg.style.fill = this.carData.color;
-        garageUi.appendChild(carImg);
+        carItem.appendChild(carImg);
 
         // const winnersItem = document.createElement('div');
         // winnersItem.className = 'winners__item';
