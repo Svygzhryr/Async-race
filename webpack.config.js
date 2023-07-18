@@ -18,6 +18,10 @@ const baseConfig = {
                 use: ['style-loader', 'css-loader'],
             },
             {
+                test: /\.svg$/,
+                loader: 'svg-inline-loader'
+            },
+            {
                 test: /\.(png|jpe?g|gif|ico)$/i,
                 use: [
                     {

@@ -1,3 +1,6 @@
+import { gotCars } from '../../interface';
+import CarItem from './car';
+
 export default class Garage {
     app: Element | null;
     menu: Element | null;
@@ -67,7 +70,7 @@ export default class Garage {
 
             const title = document.createElement('h2');
             title.className = 'garage__title';
-            title.innerHTML = 'Garage';
+            title.innerHTML = 'Garage (checking...)';
             this.garageUi.appendChild(title);
 
             this.getCars(title);
@@ -93,6 +96,11 @@ export default class Garage {
 
         page.innerHTML = `Page: 1`;
         title.innerHTML = `Garage (${items})`;
+
+        cars.forEach((e: gotCars) => {
+            const car = new CarItem(e);
+            car.initCar();
+        });
 
         console.log(cars);
         console.log(items);

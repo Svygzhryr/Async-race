@@ -3,3 +3,9 @@ export interface gotWinners {
     wins: number;
     time: number;
 }
+
+export interface gotCars {
+    name: string;
+    color: string;
+    id: number;
+}

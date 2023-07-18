@@ -31,6 +31,7 @@
         "sass": "^1.63.4",
         "sass-loader": "^13.3.2",
         "style-loader": "^2.0.0",
+        "svg-inline-loader": "^0.8.2",
         "ts-loader": "^9.4.4",
         "typescript": "^5.1.6",
         "webpack": "^5.86.0",
