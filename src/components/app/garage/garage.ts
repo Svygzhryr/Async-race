@@ -99,7 +99,9 @@ export default class Garage {
 
         cars.forEach((e: gotCars) => {
             const car = new CarItem(e);
-            car.initCar();
+            if (this.garageUi) {
+                car.initCar(this.garageUi);
+            }
         });
 
         console.log(cars);

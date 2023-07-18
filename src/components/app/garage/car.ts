@@ -1,5 +1,5 @@
 import { gotCars } from '../../interface';
-import svg = require('../../../assets/car_icon.svg');
+import image from '../../../assets/car_icon.svg';
 
 export default class CarItem {
     carData: gotCars;
@@ -7,10 +7,14 @@ export default class CarItem {
         this.carData = carData;
     }
 
-    initCar() {
+    initCar(garageUi: Element) {
         const carImg = document.createElement('img');
-        carImg.setAttribute('src', svg);
-        console.log(this.carData);
+        carImg.setAttribute('src', image);
+        carImg.className = 'car';
+        console.log(this.carData.color);
+        carImg.style.fill = this.carData.color;
+        garageUi.appendChild(carImg);
+
         // const winnersItem = document.createElement('div');
         // winnersItem.className = 'winners__item';
         // this.garageUi?.appendChild(winnersItem);
