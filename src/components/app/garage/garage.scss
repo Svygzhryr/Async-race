@@ -87,6 +87,12 @@ form {
     }
 }
 
+.btn_prev, .btn_next {
+    font-size: 30px;
+    width: unset;
+    color: $text;
+}
+
 .btn-car_select:hover {
     background-color: $active;
     color: $alt;

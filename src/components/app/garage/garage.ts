@@ -73,7 +73,19 @@ export default class Garage {
             title.innerHTML = 'Garage (checking...)';
             this.garageUi.appendChild(title);
 
-            this.getCars(title);
+            this.getCars();
+
+            const prev = document.createElement('button');
+            prev.className = 'btn btn_prev';
+            prev.innerHTML = '←';
+            prev.addEventListener('click', this.handlePrevPage);
+            this.garageUi?.appendChild(prev);
+
+            const next = document.createElement('button');
+            next.className = 'btn btn_next';
+            next.innerHTML = '→';
+            next.addEventListener('click', this.handleNextPage);
+            this.garageUi?.appendChild(next);
         }
     }
 
@@ -84,17 +96,24 @@ export default class Garage {
         getWinners?.classList.add('inactive');
     }
 
-    async getCars(title: Element) {
-        const page = document.createElement('h3');
+    handlePrevPage() {
+        this.getCars(1);
+    }
 
-        this.garageUi?.appendChild(page);
-        const response = await fetch('http://127.0.0.1:3000/garage?_page=1&_limit=7', {
+    handleNextPage() {
+        console.log('next');
+    }
+
+    async getCars(garagePage?: number) {
+        const response = await fetch(`http://127.0.0.1:3000/garage?_page=${garagePage ?? 1}&_limit=7`, {
             method: 'GET',
         });
+        const page = document.createElement('h3');
         const cars = await response.json();
         const items = await response.headers.get('X-Total-Count');
-
+        this.garageUi?.appendChild(page);
         page.innerHTML = `Page: 1`;
+        const title = document.querySelector('.garage__title') as Element;
         title.innerHTML = `Garage (${items})`;
 
         cars.forEach((e: gotCars) => {
@@ -103,8 +122,5 @@ export default class Garage {
                 car.initCar(this.garageUi);
             }
         });
-
-        console.log(cars);
-        console.log(items);
     }
 }
