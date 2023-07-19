@@ -11,17 +11,23 @@ export default class CarItem {
         const carItem = document.createElement('div');
         carItem.className = 'garage__item';
         carItem.innerHTML = this.carData.name;
+        carItem.style.color = this.carData.color;
         garageUi.appendChild(carItem);
+
+        const carSelect = document.createElement('button');
+        carSelect.className = 'btn-car btn-car_select';
+        carSelect.innerHTML = 'Select';
+        carItem.appendChild(carSelect);
+
+        const carRemove = document.createElement('button');
+        carRemove.className = 'btn-car btn-car_remove';
+        carRemove.innerHTML = 'Remove';
+        carItem.appendChild(carRemove);
+
         const carImg = document.createElement('div');
         carImg.innerHTML = image;
         carImg.className = 'car';
-        console.log(carImg.querySelector('svg'));
         carImg.style.fill = this.carData.color;
         carItem.appendChild(carImg);
-
-        // const winnersItem = document.createElement('div');
-        // winnersItem.className = 'winners__item';
-        // this.garageUi?.appendChild(winnersItem);
-        // winnersItem.innerHTML = `${e.name}`;
     }
 }

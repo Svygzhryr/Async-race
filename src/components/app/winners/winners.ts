@@ -42,23 +42,21 @@ export default class Winners {
     }
 
     async getWinners(title: Element) {
-        const response = await fetch('http://127.0.0.1:3000/winners?_page=1&_limit=7', {
-            method: 'GET',
-        });
+        const response = await fetch('http://127.0.0.1:3000/winners?_page=1&_limit=7');
         const winners = await response.json();
-        const items = (await response.headers.get('X-Total-Count')) as string | number;
+        const items = response.headers.get('X-Total-Count') as string | number;
 
         title.innerHTML = `Winners (${items})`;
         const page = document.createElement('h3');
         page.innerHTML = `Page ${1}`;
         this.winnersUi?.appendChild(page);
 
-        winners.forEach((e: gotWinners) => {
+        winners.forEach((winnerData: gotWinners) => {
             const winnersItem = document.createElement('div');
             winnersItem.className = 'winners__item';
             this.winnersUi?.appendChild(winnersItem);
 
-            winnersItem.innerHTML = `${e.id} ${e.time} ${e.wins}`;
+            winnersItem.innerHTML = `${winnerData.id} ${winnerData.time} ${winnerData.wins}`;
         });
         console.log(winners, items);
     }
