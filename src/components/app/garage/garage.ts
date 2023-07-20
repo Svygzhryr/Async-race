@@ -148,7 +148,7 @@ export default class Garage {
         const carName = document.querySelector('.create-wrapper .garage__input') as HTMLInputElement;
         const carColor = document.querySelector('.create-wrapper .garage__color') as HTMLInputElement;
         console.log(carName.value, carColor.value);
-        const response = await fetch('http://127.0.0.1:3000/garage', {
+        await fetch('http://127.0.0.1:3000/garage', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -159,6 +159,5 @@ export default class Garage {
                 id: this.totalItems,
             }),
         });
-        console.log(response);
     }
 }

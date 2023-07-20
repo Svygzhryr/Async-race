@@ -24,6 +24,9 @@ export default class CarItem {
         const carRemove = document.createElement('button');
         carRemove.className = 'btn-car btn-car_remove';
         carRemove.innerHTML = 'Remove';
+        carRemove.addEventListener('click', () => {
+            this.removeCar(this.carData.id);
+        });
         carItem.appendChild(carRemove);
 
         carItem.appendChild(document.createElement('br'));
@@ -43,5 +46,11 @@ export default class CarItem {
         carImg.className = 'car';
         carImg.style.fill = this.carData.color;
         carItem.appendChild(carImg);
+    }
+
+    async removeCar(id: number) {
+        await fetch(`http://127.0.0.1:3000/garage/${id}`, {
+            method: 'DELETE',
+        });
     }
 }
