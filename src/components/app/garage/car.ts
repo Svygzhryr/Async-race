@@ -7,12 +7,12 @@ export default class CarItem {
         this.carData = carData;
     }
 
-    initCar(garageUi: Element) {
+    initCar(carItems: Element) {
         const carItem = document.createElement('div');
         carItem.className = 'garage__item';
         carItem.innerHTML = this.carData.name;
         carItem.style.color = this.carData.color;
-        garageUi.appendChild(carItem);
+        carItems.appendChild(carItem);
 
         const carSelect = document.createElement('button');
         carSelect.className = 'btn-car btn-car_select';

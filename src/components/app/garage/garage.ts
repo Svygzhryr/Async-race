@@ -5,10 +5,12 @@ export default class Garage {
     app: Element | null;
     menu: Element | null;
     garageUi: Element | null;
+    currentPage: number;
     constructor() {
         this.app = document.querySelector('.app');
         this.menu = document.querySelector('.menu');
         this.garageUi = document.createElement('div');
+        this.currentPage = 1;
     }
 
     setUp() {
@@ -73,19 +75,11 @@ export default class Garage {
             title.innerHTML = 'Garage (checking...)';
             this.garageUi.appendChild(title);
 
+            const carItems = document.createElement('div');
+            carItems.className = 'car__items';
+            this.garageUi?.appendChild(carItems);
+
             this.getCars();
-
-            const prev = document.createElement('button');
-            prev.className = 'btn btn_prev';
-            prev.innerHTML = '←';
-            prev.addEventListener('click', this.handlePrevPage);
-            this.garageUi?.appendChild(prev);
-
-            const next = document.createElement('button');
-            next.className = 'btn btn_next';
-            next.innerHTML = '→';
-            next.addEventListener('click', this.handleNextPage);
-            this.garageUi?.appendChild(next);
         }
     }
 
@@ -96,31 +90,42 @@ export default class Garage {
         getWinners?.classList.add('inactive');
     }
 
-    handlePrevPage() {
-        this.getCars(1);
-    }
-
-    handleNextPage() {
-        console.log('next');
-    }
-
-    async getCars(garagePage?: number) {
-        const response = await fetch(`http://127.0.0.1:3000/garage?_page=${garagePage ?? 1}&_limit=7`, {
+    async getCars() {
+        const response = await fetch(`http://127.0.0.1:3000/garage?_page=${this.currentPage}&_limit=7`, {
             method: 'GET',
         });
+        console.log(this.currentPage);
         const page = document.createElement('h3');
         const cars = await response.json();
-        const items = await response.headers.get('X-Total-Count');
-        this.garageUi?.appendChild(page);
-        page.innerHTML = `Page: 1`;
+        const items = response.headers.get('X-Total-Count');
+        const carItems = document.querySelector('.car__items') as Element;
+        carItems.innerHTML = '';
+        carItems.appendChild(page);
+        page.innerHTML = `Page: ${this.currentPage}`;
         const title = document.querySelector('.garage__title') as Element;
         title.innerHTML = `Garage (${items})`;
 
         cars.forEach((e: gotCars) => {
             const car = new CarItem(e);
-            if (this.garageUi) {
-                car.initCar(this.garageUi);
-            }
+            car.initCar(carItems);
         });
+
+        const prev = document.createElement('button');
+        prev.className = 'btn btn_prev';
+        prev.innerHTML = '←';
+        prev.addEventListener('click', () => {
+            this.currentPage--;
+            this.getCars();
+        });
+        carItems.appendChild(prev);
+
+        const next = document.createElement('button');
+        next.className = 'btn btn_next';
+        next.innerHTML = '→';
+        next.addEventListener('click', () => {
+            this.currentPage++;
+            this.getCars();
+        });
+        carItems.appendChild(next);
     }
 }
