@@ -80,7 +80,11 @@ form {
     font-size: 16px;
     padding: 5px 10px;
 
+    margin-bottom: 5px;
+
     transition: all .2s ease-in-out;
+
+    font-weight: 700;
 
     &:hover {
         cursor: pointer;
@@ -99,6 +103,16 @@ form {
 }
 
 .btn-car_remove:hover {
+    background-color: $wrong;
+    color: $alt;
+}
+
+.btn-car_start:hover {
+    background-color: $alt-active;
+    color: $alt;
+}
+
+.btn-car_stop:hover {
     background-color: $wrong;
     color: $alt;
 }

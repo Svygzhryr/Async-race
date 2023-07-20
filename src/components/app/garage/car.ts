@@ -24,6 +24,18 @@ export default class CarItem {
         carRemove.innerHTML = 'Remove';
         carItem.appendChild(carRemove);
 
+        carItem.appendChild(document.createElement('br'));
+
+        const carStart = document.createElement('button');
+        carStart.className = 'btn-car btn-car_start';
+        carStart.innerHTML = 'A';
+        carItem.appendChild(carStart);
+
+        const carStop = document.createElement('button');
+        carStop.className = 'btn-car btn-car_stop';
+        carStop.innerHTML = 'B';
+        carItem.appendChild(carStop);
+
         const carImg = document.createElement('div');
         carImg.innerHTML = image;
         carImg.className = 'car';

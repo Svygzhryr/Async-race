@@ -91,13 +91,15 @@ export default class Garage {
     }
 
     async getCars() {
-        const response = await fetch(`http://127.0.0.1:3000/garage?_page=${this.currentPage}&_limit=7`, {
+        const carsPerPage = 7;
+        const response = await fetch(`http://127.0.0.1:3000/garage?_page=${this.currentPage}&_limit=${carsPerPage}`, {
             method: 'GET',
         });
         console.log(this.currentPage);
         const page = document.createElement('h3');
         const cars = await response.json();
-        const items = response.headers.get('X-Total-Count');
+        const totalCount = response.headers.get('X-Total-Count') as string;
+        const items: number = +totalCount;
         const carItems = document.querySelector('.car__items') as Element;
         carItems.innerHTML = '';
         carItems.appendChild(page);
@@ -105,16 +107,14 @@ export default class Garage {
         const title = document.querySelector('.garage__title') as Element;
         title.innerHTML = `Garage (${items})`;
 
-        cars.forEach((e: gotCars) => {
-            const car = new CarItem(e);
-            car.initCar(carItems);
-        });
-
         const prev = document.createElement('button');
         prev.className = 'btn btn_prev';
         prev.innerHTML = '←';
         prev.addEventListener('click', () => {
-            this.currentPage--;
+            const minPages = 1;
+            if (this.currentPage > minPages) {
+                this.currentPage--;
+            }
             this.getCars();
         });
         carItems.appendChild(prev);
@@ -123,9 +123,17 @@ export default class Garage {
         next.className = 'btn btn_next';
         next.innerHTML = '→';
         next.addEventListener('click', () => {
-            this.currentPage++;
+            const maxPages = Math.ceil(items / carsPerPage);
+            if (this.currentPage < maxPages) {
+                this.currentPage++;
+            }
             this.getCars();
         });
         carItems.appendChild(next);
+
+        cars.forEach((e: gotCars) => {
+            const car = new CarItem(e);
+            car.initCar(carItems);
+        });
     }
 }
