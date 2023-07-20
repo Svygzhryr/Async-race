@@ -141,7 +141,7 @@ export default class Garage {
         carItems.appendChild(next);
 
         cars.forEach((e: gotCars) => {
-            const car = new CarItem(e);
+            const car = new CarItem(e, this.getCars, this.currentPage);
             car.initCar(carItems);
         });
     }

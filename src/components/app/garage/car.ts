@@ -3,8 +3,12 @@ import image from '../../../assets/car_icon.svg';
 
 export default class CarItem {
     carData: gotCars;
-    constructor(carData: gotCars) {
+    getCars: () => Promise<void>;
+    currentPage: number;
+    constructor(carData: gotCars, getCars: () => Promise<void>, currentPage: number) {
         this.carData = carData;
+        this.getCars = getCars;
+        this.currentPage = currentPage;
     }
 
     initCar(carItems: Element) {
@@ -52,5 +56,6 @@ export default class CarItem {
         await fetch(`http://127.0.0.1:3000/garage/${id}`, {
             method: 'DELETE',
         });
+        this.getCars();
     }
 }
