@@ -58,6 +58,5 @@ export default class Winners {
 
             winnersItem.innerHTML = `${winnerData.id} ${winnerData.time} ${winnerData.wins}`;
         });
-        console.log(winners, items);
     }
 }

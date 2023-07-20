@@ -104,7 +104,6 @@ export default class Garage {
         const response = await fetch(`http://127.0.0.1:3000/garage?_page=${this.currentPage}&_limit=${carsPerPage}`, {
             method: 'GET',
         });
-        console.log(this.currentPage);
         const page = document.createElement('h3');
         const cars = await response.json();
         const totalCount = response.headers.get('X-Total-Count') as string;
@@ -147,9 +146,11 @@ export default class Garage {
     }
 
     async createCar() {
+        console.log(this.totalItems);
         const carName = document.querySelector('.create-wrapper .garage__input') as HTMLInputElement;
         const carColor = document.querySelector('.create-wrapper .garage__color') as HTMLInputElement;
-        console.log(carName.value, carColor.value);
+        const nextId = this.totalItems + 1;
+        console.log(nextId);
         await fetch('http://127.0.0.1:3000/garage', {
             method: 'POST',
             headers: {
@@ -158,9 +159,10 @@ export default class Garage {
             body: JSON.stringify({
                 name: carName.value,
                 color: carColor.value,
-                id: this.totalItems,
+                id: nextId,
             }),
         });
+        this.totalItems = nextId;
         this.getCars();
     }
 }
