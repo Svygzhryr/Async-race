@@ -65,18 +65,21 @@ form {
     border-bottom: 2px dashed $text;
     margin: 50px;
     font-size: 24px;
+    text-shadow: $text 0px 0px 1px,   $text 0px 0px 1px,   $text 0px 0px 1px,
+             $text 0px 0px 1px,   $text 0px 0px 1px,   $text 0px 0px 1px;
+
 }
 
 .car {
     width: 100px;
     margin-top: 10px;
+    margin-bottom: -8px;
 }
 
 .btn-car {
     background-color: $alt;
     border: none;
     color: $text;
-    margin-left: 10px;
     font-size: 16px;
     padding: 5px 10px;
 
@@ -91,6 +94,8 @@ form {
     }
 }
 
+
+
 .btn_prev, .btn_next {
     font-size: 30px;
     width: unset;
@@ -102,9 +107,13 @@ form {
     color: $alt;
 }
 
-.btn-car_remove:hover {
-    background-color: $wrong;
-    color: $alt;
+.btn-car_remove {
+    margin-left: 10px;
+
+    &:hover {
+        background-color: $wrong;
+        color: $alt;
+    }
 }
 
 .btn-car_start:hover {
@@ -112,7 +121,11 @@ form {
     color: $alt;
 }
 
-.btn-car_stop:hover {
-    background-color: $wrong;
-    color: $alt;
+.btn-car_stop {
+    margin-left: 10px;
+
+    &:hover {
+        background-color: $wrong;
+        color: $alt;
+    }
 }

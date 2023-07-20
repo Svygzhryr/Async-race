@@ -14,6 +14,8 @@ export default class CarItem {
         carItem.style.color = this.carData.color;
         carItems.appendChild(carItem);
 
+        carItem.appendChild(document.createElement('br'));
+
         const carSelect = document.createElement('button');
         carSelect.className = 'btn-car btn-car_select';
         carSelect.innerHTML = 'Select';

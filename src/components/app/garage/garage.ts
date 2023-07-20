@@ -6,11 +6,13 @@ export default class Garage {
     menu: Element | null;
     garageUi: Element | null;
     currentPage: number;
+    totalItems: number;
     constructor() {
         this.app = document.querySelector('.app');
         this.menu = document.querySelector('.menu');
         this.garageUi = document.createElement('div');
         this.currentPage = 1;
+        this.totalItems = 1;
     }
 
     setUp() {
@@ -29,35 +31,40 @@ export default class Garage {
             this.garageUi.className = 'garage-wrapper';
             this.app?.appendChild(this.garageUi as Element);
 
-            const resetWrapper = document.createElement('form');
             const createWrapper = document.createElement('form');
+            const updateWrapper = document.createElement('form');
             const subMenuWrapper = document.createElement('form');
-            resetWrapper.className = 'reset-wrapper';
             createWrapper.className = 'create-wrapper';
+            updateWrapper.className = 'update-wrapper';
             subMenuWrapper.className = 'submenu-wrapper';
-            this.garageUi.appendChild(resetWrapper);
             this.garageUi.appendChild(createWrapper);
+            this.garageUi.appendChild(updateWrapper);
             this.garageUi.appendChild(subMenuWrapper);
 
             const garageInput = document.createElement('input');
-            const garageColor = document.createElement('input');
-            const garageButton = document.createElement('button');
             garageInput.className = 'garage__input';
+
+            const garageColor = document.createElement('input');
             garageColor.className = 'garage__color';
-            garageButton.className = 'btn_reset btn_garage-menu';
             garageColor.setAttribute('type', 'color');
-            resetWrapper.appendChild(garageInput.cloneNode());
-            resetWrapper.appendChild(garageColor.cloneNode());
+
+            const garageButton = document.createElement('button');
+            garageButton.className = 'btn_reset btn_garage-menu';
             garageButton.className = 'btn_garage-menu';
-            const create = garageButton.cloneNode() as HTMLElement;
-            create.innerHTML = 'Create';
-            resetWrapper.appendChild(create);
+            garageButton.setAttribute('type', 'button');
 
             createWrapper.appendChild(garageInput.cloneNode());
             createWrapper.appendChild(garageColor.cloneNode());
+            const create = garageButton.cloneNode() as HTMLElement;
+            create.innerHTML = 'Create';
+            createWrapper.appendChild(create);
+            create.addEventListener('click', this.createCar);
+
+            updateWrapper.appendChild(garageInput.cloneNode());
+            updateWrapper.appendChild(garageColor.cloneNode());
             const update = garageButton.cloneNode() as HTMLElement;
             update.innerHTML = 'Update';
-            createWrapper.appendChild(update);
+            updateWrapper.appendChild(update);
 
             garageButton.className = 'btn_garage-menu';
             const race = garageButton.cloneNode() as HTMLElement;
@@ -99,13 +106,13 @@ export default class Garage {
         const page = document.createElement('h3');
         const cars = await response.json();
         const totalCount = response.headers.get('X-Total-Count') as string;
-        const items: number = +totalCount;
+        this.totalItems = +totalCount;
         const carItems = document.querySelector('.car__items') as Element;
         carItems.innerHTML = '';
         carItems.appendChild(page);
         page.innerHTML = `Page: ${this.currentPage}`;
         const title = document.querySelector('.garage__title') as Element;
-        title.innerHTML = `Garage (${items})`;
+        title.innerHTML = `Garage (${this.totalItems})`;
 
         const prev = document.createElement('button');
         prev.className = 'btn btn_prev';
@@ -123,7 +130,7 @@ export default class Garage {
         next.className = 'btn btn_next';
         next.innerHTML = '→';
         next.addEventListener('click', () => {
-            const maxPages = Math.ceil(items / carsPerPage);
+            const maxPages = Math.ceil(this.totalItems / carsPerPage);
             if (this.currentPage < maxPages) {
                 this.currentPage++;
             }
@@ -135,5 +142,23 @@ export default class Garage {
             const car = new CarItem(e);
             car.initCar(carItems);
         });
+    }
+
+    async createCar() {
+        const carName = document.querySelector('.create-wrapper .garage__input') as HTMLInputElement;
+        const carColor = document.querySelector('.create-wrapper .garage__color') as HTMLInputElement;
+        console.log(carName.value, carColor.value);
+        const response = await fetch('http://127.0.0.1:3000/garage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: carName.value,
+                color: carColor.value,
+                id: this.totalItems,
+            }),
+        });
+        console.log(response);
     }
 }
