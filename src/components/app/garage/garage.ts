@@ -58,7 +58,9 @@ export default class Garage {
             const create = garageButton.cloneNode() as HTMLElement;
             create.innerHTML = 'Create';
             createWrapper.appendChild(create);
-            create.addEventListener('click', this.createCar);
+            create.addEventListener('click', () => {
+                this.createCar();
+            });
 
             updateWrapper.appendChild(garageInput.cloneNode());
             updateWrapper.appendChild(garageColor.cloneNode());
@@ -159,5 +161,6 @@ export default class Garage {
                 id: this.totalItems,
             }),
         });
+        this.getCars();
     }
 }
