@@ -1,4 +1,5 @@
 import { gotCars } from '../../interface';
+import { CAR_MANUFACTURERS, CAR_MODELS } from '../../manufacturers';
 import CarItem from './car';
 
 export default class Garage {
@@ -80,6 +81,9 @@ export default class Garage {
             race.innerHTML = 'Race';
             reset.innerHTML = 'Reset';
             generate.innerHTML = 'Generate Cars';
+            generate.addEventListener('click', () => {
+                this.generateCars();
+            });
             subMenuWrapper.appendChild(race);
             subMenuWrapper.appendChild(reset);
             subMenuWrapper.appendChild(generate);
@@ -157,13 +161,18 @@ export default class Garage {
         });
     }
 
+    generateCarId() {
+        let i = 1;
+        while (this.carsIds.includes(i)) {
+            i++;
+        }
+        this.carsIds.push(i);
+        return i;
+    }
+
     async createCar() {
         const carName = document.querySelector('.create-wrapper .garage__input') as HTMLInputElement;
         const carColor = document.querySelector('.create-wrapper .garage__color') as HTMLInputElement;
-        let carId = 1;
-        while (this.carsIds.includes(carId)) {
-            carId++;
-        }
         await fetch('http://127.0.0.1:3000/garage', {
             method: 'POST',
             headers: {
@@ -172,6 +181,35 @@ export default class Garage {
             body: JSON.stringify({
                 name: carName.value,
                 color: carColor.value,
+                id: this.generateCarId(),
+            }),
+        });
+        this.getCars();
+    }
+
+    async generateCars() {
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF'.split('');
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.round(Math.random() * 15)];
+            }
+            return color;
+        }
+
+        const carPrefix = CAR_MANUFACTURERS[Math.floor(Math.random() * CAR_MANUFACTURERS.length)];
+        const carPostfix = CAR_MODELS[Math.floor(Math.random() * CAR_MODELS.length)];
+        const carColor = getRandomColor();
+        const carId = this.generateCarId();
+
+        await fetch('http://127.0.0.1:3000/garage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: `${carPrefix} ${carPostfix}`,
+                color: carColor,
                 id: carId,
             }),
         });
