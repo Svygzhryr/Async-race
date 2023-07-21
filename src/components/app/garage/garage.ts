@@ -113,9 +113,13 @@ export default class Garage {
         const response = await fetch(`http://127.0.0.1:3000/garage?_page=${this.currentPage}&_limit=${carsPerPage}`, {
             method: 'GET',
         });
+        const responseIds = await fetch(`http://127.0.0.1:3000/garage`, {
+            method: 'GET',
+        });
         const page = document.createElement('h3');
         const cars = await response.json();
-        cars.forEach((e: gotCars) => {
+        const carsIds = await responseIds.json();
+        carsIds.forEach((e: gotCars) => {
             try {
                 this.carsIds.push(e.id);
             } catch (err) {
