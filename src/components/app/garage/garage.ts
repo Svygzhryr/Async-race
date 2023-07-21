@@ -201,22 +201,25 @@ export default class Garage {
             return color;
         }
 
-        const carPrefix = CAR_MANUFACTURERS[Math.floor(Math.random() * CAR_MANUFACTURERS.length)];
-        const carPostfix = CAR_MODELS[Math.floor(Math.random() * CAR_MODELS.length)];
-        const carColor = getRandomColor();
-        const carId = this.generateCarId();
+        for (let i = 1; i <= 100; i++) {
+            const carPrefix = CAR_MANUFACTURERS[Math.floor(Math.random() * CAR_MANUFACTURERS.length)];
+            const carPostfix = CAR_MODELS[Math.floor(Math.random() * CAR_MODELS.length)];
+            const carColor = getRandomColor();
+            const carId = this.generateCarId();
 
-        await fetch('http://127.0.0.1:3000/garage', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name: `${carPrefix} ${carPostfix}`,
-                color: carColor,
-                id: carId,
-            }),
-        });
+            await fetch('http://127.0.0.1:3000/garage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: `${carPrefix} ${carPostfix}`,
+                    color: carColor,
+                    id: carId,
+                }),
+            });
+            this.carsIds.push(carId);
+        }
         this.getCars();
     }
 
