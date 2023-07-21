@@ -129,3 +129,10 @@ form {
         color: $alt;
     }
 }
+
+.update-wrapper {
+    * {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+}

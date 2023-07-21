@@ -58,4 +58,8 @@ export default class CarItem {
         });
         this.getCars();
     }
+
+    async updateCar() {
+        // апдейтим машинку
+    }
 }

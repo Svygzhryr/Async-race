@@ -7,10 +7,12 @@ export default class Garage {
     garageUi: Element | null;
     currentPage: number;
     totalItems: number;
+    carsIds: Array<number>;
     constructor() {
         this.app = document.querySelector('.app');
         this.menu = document.querySelector('.menu');
         this.garageUi = document.createElement('div');
+        this.carsIds = [];
         this.currentPage = 1;
         this.totalItems = 1;
     }
@@ -106,6 +108,9 @@ export default class Garage {
         });
         const page = document.createElement('h3');
         const cars = await response.json();
+        cars.forEach((e: gotCars) => {
+            this.carsIds.push(e.id);
+        });
         const totalCount = response.headers.get('X-Total-Count') as string;
         this.totalItems = +totalCount;
         const carItems = document.querySelector('.car__items') as Element;
@@ -146,11 +151,12 @@ export default class Garage {
     }
 
     async createCar() {
-        console.log(this.totalItems);
         const carName = document.querySelector('.create-wrapper .garage__input') as HTMLInputElement;
         const carColor = document.querySelector('.create-wrapper .garage__color') as HTMLInputElement;
-        const nextId = this.totalItems + 1;
-        console.log(nextId);
+        let carId = 1;
+        while (this.carsIds.includes(carId)) {
+            carId++;
+        }
         await fetch('http://127.0.0.1:3000/garage', {
             method: 'POST',
             headers: {
@@ -159,10 +165,9 @@ export default class Garage {
             body: JSON.stringify({
                 name: carName.value,
                 color: carColor.value,
-                id: nextId,
+                id: carId,
             }),
         });
-        this.totalItems = nextId;
         this.getCars();
     }
 }
