@@ -130,9 +130,8 @@ form {
     }
 }
 
-.update-wrapper {
-    * {
-        opacity: 0.3;
-        pointer-events: none;
-    }
+.input_inactive {
+    opacity: 0.3;
+    pointer-events: none;
 }
+

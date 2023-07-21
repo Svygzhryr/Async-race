@@ -23,6 +23,9 @@ export default class CarItem {
         const carSelect = document.createElement('button');
         carSelect.className = 'btn-car btn-car_select';
         carSelect.innerHTML = 'Select';
+        carSelect.addEventListener('click', () => {
+            this.selectCar(this.carData.id);
+        });
         carItem.appendChild(carSelect);
 
         const carRemove = document.createElement('button');
@@ -59,7 +62,8 @@ export default class CarItem {
         this.getCars();
     }
 
-    async updateCar() {
-        // апдейтим машинку
+    async selectCar(id: number) {
+        sessionStorage.setItem('selectedCarId', id.toString());
+        document.querySelector('.update-wrapper')?.classList.remove('input_inactive');
     }
 }

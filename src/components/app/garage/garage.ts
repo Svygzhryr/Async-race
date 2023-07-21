@@ -37,7 +37,7 @@ export default class Garage {
             const updateWrapper = document.createElement('form');
             const subMenuWrapper = document.createElement('form');
             createWrapper.className = 'create-wrapper';
-            updateWrapper.className = 'update-wrapper';
+            updateWrapper.className = 'update-wrapper input_inactive';
             subMenuWrapper.className = 'submenu-wrapper';
             this.garageUi.appendChild(createWrapper);
             this.garageUi.appendChild(updateWrapper);
@@ -68,6 +68,9 @@ export default class Garage {
             updateWrapper.appendChild(garageColor.cloneNode());
             const update = garageButton.cloneNode() as HTMLElement;
             update.innerHTML = 'Update';
+            update.addEventListener('click', () => {
+                this.updateCar();
+            });
             updateWrapper.appendChild(update);
 
             garageButton.className = 'btn_garage-menu';
@@ -109,7 +112,11 @@ export default class Garage {
         const page = document.createElement('h3');
         const cars = await response.json();
         cars.forEach((e: gotCars) => {
-            this.carsIds.push(e.id);
+            try {
+                this.carsIds.push(e.id);
+            } catch (err) {
+                console.log('Cant get more ids at this page.. i guess');
+            }
         });
         const totalCount = response.headers.get('X-Total-Count') as string;
         this.totalItems = +totalCount;
@@ -169,5 +176,23 @@ export default class Garage {
             }),
         });
         this.getCars();
+    }
+
+    async updateCar() {
+        const carName = document.querySelector('.update-wrapper .garage__input') as HTMLInputElement;
+        const carColor = document.querySelector('.update-wrapper .garage__color') as HTMLInputElement;
+        const carId = sessionStorage.getItem('selectedCarId');
+        await fetch(`http://127.0.0.1:3000/garage/${carId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: carName.value,
+                color: carColor.value,
+            }),
+        });
+        this.getCars();
+        document.querySelector('.update-wrapper')?.classList.add('input_inactive');
     }
 }
