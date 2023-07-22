@@ -41,11 +41,17 @@ export default class CarItem {
         const carStart = document.createElement('button');
         carStart.className = 'btn-car btn-car_start';
         carStart.innerHTML = 'A';
+        carStart.addEventListener('click', (e: Event) => {
+            this.startEngine(this.carData.id, e);
+        });
         carItem.appendChild(carStart);
 
         const carStop = document.createElement('button');
         carStop.className = 'btn-car btn-car_stop';
         carStop.innerHTML = 'B';
+        carStop.addEventListener('click', () => {
+            this.stopEngine(this.carData.id);
+        });
         carItem.appendChild(carStop);
 
         const carImg = document.createElement('div');
@@ -65,5 +71,37 @@ export default class CarItem {
     async selectCar(id: number) {
         sessionStorage.setItem('selectedCarId', id.toString());
         document.querySelector('.update-wrapper')?.classList.remove('input_inactive');
+    }
+
+    async startEngine(id: number, e: Event) {
+        const element = e.target as HTMLElement;
+        const carElement = element.nextSibling?.nextSibling as HTMLElement;
+        const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=started`, {
+            method: 'PATCH',
+        });
+        // if (response.ok) {
+        const carSpecs = await response.json();
+        // } else {
+        //     console.log('Cant get specified car');
+        // }
+        let calculateWidth = 0;
+        try {
+            const road = document.querySelector('.garage__item') as HTMLElement;
+            const roadWidth = +getComputedStyle(road).width.slice(0, -2) as number;
+            calculateWidth = roadWidth - 100;
+        } catch {
+            null;
+        }
+        const driving = [{ marginLeft: '0px' }, { marginLeft: `${calculateWidth}px` }];
+
+        carElement.animate(driving, { duration: 2000 });
+    }
+
+    async stopEngine(id: number) {
+        const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=stopped`, {
+            method: 'PATCH',
+        });
+        const started = await response.json();
+        console.log(started);
     }
 }
