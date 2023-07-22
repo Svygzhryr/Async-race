@@ -92,9 +92,11 @@ export default class CarItem {
         } catch {
             null;
         }
+        console.log(carSpecs.velocity);
         const driving = [{ marginLeft: '0px' }, { marginLeft: `${calculateWidth}px` }];
+        console.log(carSpecs);
 
-        carElement.animate(driving, { duration: 2000 });
+        carElement.animate(driving, { duration: carSpecs.distance / carSpecs.velocity, endDelay: 3000 });
     }
 
     async stopEngine(id: number) {
