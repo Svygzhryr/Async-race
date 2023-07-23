@@ -47,10 +47,10 @@ export default class CarItem {
         carItem.appendChild(carStart);
 
         const carStop = document.createElement('button');
-        carStop.className = 'btn-car btn-car_stop';
+        carStop.className = 'btn-car btn-car_stop input_inactive';
         carStop.innerHTML = 'B';
-        carStop.addEventListener('click', () => {
-            this.stopEngine(this.carData.id);
+        carStop.addEventListener('click', (e: Event) => {
+            this.stopEngine(this.carData.id, e);
         });
         carItem.appendChild(carStop);
 
@@ -74,11 +74,13 @@ export default class CarItem {
     }
 
     async startEngine(id: number, e: Event) {
-        const element = e.target as HTMLElement;
-        const carElement = element.nextSibling?.nextSibling as HTMLElement;
+        const startButton = e.target as HTMLElement;
+        const stopButton = startButton.nextSibling as HTMLElement;
+        const carElement = startButton.nextSibling?.nextSibling as HTMLElement;
         const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=started`, {
             method: 'PATCH',
         });
+        stopButton.classList.remove('input_inactive');
         // if (response.ok) {
         const carSpecs = await response.json();
         // } else {
@@ -92,18 +94,40 @@ export default class CarItem {
         } catch {
             null;
         }
-        console.log(carSpecs.velocity);
         const driving = [{ marginLeft: '0px' }, { marginLeft: `${calculateWidth}px` }];
-        console.log(carSpecs);
 
-        carElement.animate(driving, { duration: carSpecs.distance / carSpecs.velocity, endDelay: 3000 });
+        const animation = carElement.animate(driving, {
+            duration: carSpecs.distance / carSpecs.velocity,
+        });
+        animation.addEventListener('finish', () => {
+            startButton?.classList.remove('input_inactive');
+            stopButton.classList.add('input_inactive');
+        });
+        startButton?.classList.add('input_inactive');
+
+        const driveResponse = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=drive`, {
+            method: 'PATCH',
+        });
+        // const driveResponseJson = await driveResponse.json();
+        if (driveResponse.status === 500) {
+            console.log('Car has been broken!');
+            animation.pause();
+            setTimeout(() => {
+                animation.cancel();
+                startButton?.classList.remove('input_inactive');
+                stopButton.classList.add('input_inactive');
+            }, 4000);
+        }
     }
 
-    async stopEngine(id: number) {
+    async stopEngine(id: number, e: Event) {
+        const stopButton = e.target as HTMLElement;
+        const carElement = stopButton.nextSibling?.nextSibling as HTMLElement;
         const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=stopped`, {
             method: 'PATCH',
         });
-        const started = await response.json();
-        console.log(started);
+        if (response.ok) {
+            console.log('car stopped');
+        }
     }
 }
