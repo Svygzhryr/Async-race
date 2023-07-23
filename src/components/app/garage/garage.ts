@@ -9,6 +9,7 @@ export default class Garage {
     currentPage: number;
     totalItems: number;
     carsIds: Array<number>;
+    carsOnPage: Array<CarItem>;
     constructor() {
         this.app = document.querySelector('.app');
         this.menu = document.querySelector('.menu');
@@ -16,6 +17,7 @@ export default class Garage {
         this.carsIds = [];
         this.currentPage = 1;
         this.totalItems = 1;
+        this.carsOnPage = [];
     }
 
     setUp() {
@@ -76,6 +78,9 @@ export default class Garage {
 
             garageButton.className = 'btn_garage-menu';
             const race = garageButton.cloneNode() as HTMLElement;
+            race.addEventListener('click', () => {
+                this.race();
+            });
             const reset = garageButton.cloneNode() as HTMLElement;
             const generate = garageButton.cloneNode() as HTMLElement;
             race.innerHTML = 'Race';
@@ -161,6 +166,7 @@ export default class Garage {
 
         cars.forEach((e: gotCars) => {
             const car = new CarItem(e, this.getCars, this.currentPage);
+            this.carsOnPage.push(car);
             car.initCar(carItems);
         });
     }
@@ -239,5 +245,14 @@ export default class Garage {
         });
         this.getCars();
         document.querySelector('.update-wrapper')?.classList.add('input_inactive');
+    }
+
+    async race() {
+        const referenceButtons = document.querySelectorAll('.btn-car_start');
+        const cars = this.carsOnPage;
+        for (let i = 0; i < this.carsOnPage.length; i++) {
+            const id = cars[i].carData.id;
+            cars[i].startEngine(id, referenceButtons[i] as HTMLElement);
+        }
     }
 }

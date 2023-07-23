@@ -44,7 +44,7 @@ export default class CarItem {
         carStart.className = 'btn-car btn-car_start';
         carStart.innerHTML = 'A';
         carStart.addEventListener('click', (e: Event) => {
-            this.startEngine(this.carData.id, e);
+            this.startEngine(this.carData.id, e.target as HTMLElement);
         });
         carItem.appendChild(carStart);
 
@@ -75,8 +75,9 @@ export default class CarItem {
         document.querySelector('.update-wrapper')?.classList.remove('input_inactive');
     }
 
-    async startEngine(id: number, e: Event) {
-        const startButton = e.target as HTMLElement;
+    async startEngine(id: number, e?: HTMLElement) {
+        console.log(e);
+        const startButton = e as HTMLElement;
         const stopButton = startButton.nextSibling as HTMLElement;
         const carElement = startButton.nextSibling?.nextSibling as HTMLElement;
         const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=started`, {
