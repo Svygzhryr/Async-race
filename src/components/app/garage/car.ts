@@ -5,10 +5,12 @@ export default class CarItem {
     carData: gotCars;
     getCars: () => Promise<void>;
     currentPage: number;
+    animation: Animation | null;
     constructor(carData: gotCars, getCars: () => Promise<void>, currentPage: number) {
         this.carData = carData;
         this.getCars = getCars;
         this.currentPage = currentPage;
+        this.animation = null;
     }
 
     initCar(carItems: Element) {
@@ -99,6 +101,7 @@ export default class CarItem {
         const animation = carElement.animate(driving, {
             duration: carSpecs.distance / carSpecs.velocity,
         });
+        this.animation = animation;
         animation.addEventListener('finish', () => {
             startButton?.classList.remove('input_inactive');
             stopButton.classList.add('input_inactive');
@@ -122,12 +125,16 @@ export default class CarItem {
 
     async stopEngine(id: number, e: Event) {
         const stopButton = e.target as HTMLElement;
-        const carElement = stopButton.nextSibling?.nextSibling as HTMLElement;
+        const startButton = stopButton.previousSibling as HTMLElement;
         const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=stopped`, {
             method: 'PATCH',
         });
         if (response.ok) {
-            console.log('car stopped');
+            if (this.animation) {
+                this.animation.cancel();
+            }
+            startButton.classList.remove('input_inactive');
+            stopButton.classList.add('input_inactive');
         }
     }
 }
