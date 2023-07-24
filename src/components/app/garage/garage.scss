@@ -140,6 +140,13 @@ form {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background-color: $bg;
+    padding: 20px;
+    box-shadow: 0px 0px 30px 0px $active;
+}
+
+strong {
+    color: $active;
 }
 
 @keyframes driving {

@@ -116,19 +116,20 @@ export default class CarItem {
         });
         // const driveResponseJson = await driveResponse.json();
         if (driveResponse.status === 500) {
-            console.log('Car has been broken!');
             const driven = getComputedStyle(carElement).marginLeft;
             animation.pause();
             animation.cancel();
             carElement.style.marginLeft = driven;
             stopButton.classList.add('input_inactive');
+            console.log('Car has been broken!');
+            throw new Error('Car has been broken!');
         }
 
         stopButton.classList.add('input_inactive');
 
         if (isRace && driveResponse.ok) {
             const finishTime = (duration / 1000).toFixed(2);
-            console.log(`${carName} finished in ${finishTime} seconds!`);
+            return `${carName} finished first in <strong>${finishTime}</strong> seconds!`;
         }
     }
 

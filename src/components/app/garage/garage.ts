@@ -260,6 +260,7 @@ export default class Garage {
             const promise = new Promise((resolve, reject) => {
                 const id = cars[i].carData.id;
                 const finish = cars[i].startEngine(id, referenceButtons[i] as HTMLElement, isRace);
+                console.log(finish);
                 if (finish) {
                     resolve(finish);
                 }
@@ -267,19 +268,15 @@ export default class Garage {
             });
             promises.push(promise);
         }
-        Promise.race(promises)
-            .then((value) => {
-                console.log('resolved - ' + value);
-                if (value) {
-                    const winner = document.createElement('div');
-                    winner.className = 'winner-modal';
-                    winner.innerHTML = value as string;
-                    this.app?.appendChild(winner);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        Promise.any(promises).then((value) => {
+            const winner = document.createElement('div');
+            winner.className = 'winner-modal';
+            winner.innerHTML = value as string;
+            this.app?.appendChild(winner);
+            setTimeout(() => {
+                winner.remove();
+            }, 5000);
+        });
     }
 
     async reset() {
