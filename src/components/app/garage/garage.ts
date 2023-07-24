@@ -114,6 +114,7 @@ export default class Garage {
     }
 
     async getCars() {
+        this.carsOnPage = [];
         const carsPerPage = 7;
         const response = await fetch(`http://127.0.0.1:3000/garage?_page=${this.currentPage}&_limit=${carsPerPage}`, {
             method: 'GET',
@@ -248,11 +249,41 @@ export default class Garage {
     }
 
     async race() {
+        const isRace = true;
         const referenceButtons = document.querySelectorAll('.btn-car_start');
         const cars = this.carsOnPage;
+        const promises = [];
         for (let i = 0; i < this.carsOnPage.length; i++) {
-            const id = cars[i].carData.id;
-            cars[i].startEngine(id, referenceButtons[i] as HTMLElement);
+            const promise = new Promise((resolve) => {
+                const id = cars[i].carData.id;
+                const finish = cars[i].startEngine(id, referenceButtons[i] as HTMLElement, isRace);
+                resolve(finish);
+            });
+            promises.push(promise);
         }
+        console.log(promises);
+        Promise.race(promises).then((value) => {
+            if (value) {
+                console.log(value);
+                const winner = document.createElement('div');
+                winner.className = 'winner-modal';
+                winner.innerHTML = value as string;
+                this.app?.appendChild(winner);
+            }
+        });
+
+        // const car1: Promise<void> = new Promise((resolve) => {
+        //     const id = cars[0].carData.id;
+        //     const finish = cars[0].startEngine(id, referenceButtons[0] as HTMLElement, isRace);
+        //     resolve(finish);
+        // });
+        // const car2: Promise<void> = new Promise((resolve) => {
+        //     const id = cars[1].carData.id;
+        //     const finish = cars[1].startEngine(id, referenceButtons[1] as HTMLElement, isRace);
+        //     resolve(finish);
+        // });
+        // Promise.race([car1, car2]).then((value) => {
+        //     console.log(value);
+        // });
     }
 }

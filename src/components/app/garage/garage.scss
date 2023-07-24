@@ -135,6 +135,13 @@ form {
     pointer-events: none;
 }
 
+.winner-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 @keyframes driving {
  0% {
     margin-left: 10px;

@@ -75,9 +75,12 @@ export default class CarItem {
         document.querySelector('.update-wrapper')?.classList.remove('input_inactive');
     }
 
-    async startEngine(id: number, e?: HTMLElement) {
-        console.log(e);
+    async startEngine(id: number, e?: HTMLElement, isRace?: boolean) {
         const startButton = e as HTMLElement;
+        const nameElement = e?.previousSibling?.previousSibling?.previousSibling?.previousSibling
+            ?.previousSibling as HTMLElement;
+        const carName = nameElement.textContent;
+        console.log(carName);
         const stopButton = startButton.nextSibling as HTMLElement;
         const carElement = startButton.nextSibling?.nextSibling as HTMLElement;
         const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=started`, {
@@ -98,9 +101,10 @@ export default class CarItem {
             null;
         }
         const driving = [{ marginLeft: '0px' }, { marginLeft: `${calculateWidth}px` }];
+        const duration = carSpecs.distance / carSpecs.velocity;
 
         const animation = carElement.animate(driving, {
-            duration: carSpecs.distance / carSpecs.velocity,
+            duration: duration,
         });
         this.animation = animation;
         animation.addEventListener('finish', () => {
@@ -121,6 +125,11 @@ export default class CarItem {
                 startButton?.classList.remove('input_inactive');
                 stopButton.classList.add('input_inactive');
             }, 4000);
+        }
+
+        if (isRace && driveResponse.ok) {
+            const finishTime = (duration / 1000).toFixed(2);
+            console.log(`${carName} finished first in ${finishTime} seconds!`);
         }
     }
 
