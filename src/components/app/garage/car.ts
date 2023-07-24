@@ -108,8 +108,7 @@ export default class CarItem {
         });
         this.animation = animation;
         animation.addEventListener('finish', () => {
-            startButton?.classList.remove('input_inactive');
-            stopButton.classList.add('input_inactive');
+            carElement.style.marginLeft = `${calculateWidth}px`;
         });
         startButton?.classList.add('input_inactive');
 
@@ -119,13 +118,15 @@ export default class CarItem {
         // const driveResponseJson = await driveResponse.json();
         if (driveResponse.status === 500) {
             console.log('Car has been broken!');
+            const driven = getComputedStyle(carElement).marginLeft;
+            console.log(driven);
             animation.pause();
-            setTimeout(() => {
-                animation.cancel();
-                startButton?.classList.remove('input_inactive');
-                stopButton.classList.add('input_inactive');
-            }, 4000);
+            animation.cancel();
+            carElement.style.marginLeft = driven;
+            stopButton.classList.add('input_inactive');
         }
+
+        stopButton.classList.add('input_inactive');
 
         if (isRace && driveResponse.ok) {
             const finishTime = (duration / 1000).toFixed(2);

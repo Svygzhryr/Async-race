@@ -85,6 +85,9 @@ export default class Garage {
             const generate = garageButton.cloneNode() as HTMLElement;
             race.innerHTML = 'Race';
             reset.innerHTML = 'Reset';
+            reset.addEventListener('click', () => {
+                this.reset();
+            });
             generate.innerHTML = 'Generate Cars';
             generate.addEventListener('click', () => {
                 this.generateCars();
@@ -285,5 +288,15 @@ export default class Garage {
         // Promise.race([car1, car2]).then((value) => {
         //     console.log(value);
         // });
+    }
+
+    async reset() {
+        const cars = document.querySelectorAll('.car') as NodeListOf<HTMLElement>;
+        cars.forEach((e: HTMLElement) => {
+            e.style.marginLeft = '0';
+        });
+        document.querySelectorAll('.btn-car_start').forEach((e) => {
+            e.classList.remove('input_inactive');
+        });
     }
 }
