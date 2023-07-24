@@ -80,7 +80,6 @@ export default class CarItem {
         const nameElement = e?.previousSibling?.previousSibling?.previousSibling?.previousSibling
             ?.previousSibling as HTMLElement;
         const carName = nameElement.textContent;
-        console.log(carName);
         const stopButton = startButton.nextSibling as HTMLElement;
         const carElement = startButton.nextSibling?.nextSibling as HTMLElement;
         const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=started`, {
@@ -119,7 +118,6 @@ export default class CarItem {
         if (driveResponse.status === 500) {
             console.log('Car has been broken!');
             const driven = getComputedStyle(carElement).marginLeft;
-            console.log(driven);
             animation.pause();
             animation.cancel();
             carElement.style.marginLeft = driven;
@@ -130,7 +128,7 @@ export default class CarItem {
 
         if (isRace && driveResponse.ok) {
             const finishTime = (duration / 1000).toFixed(2);
-            console.log(`${carName} finished first in ${finishTime} seconds!`);
+            console.log(`${carName} finished in ${finishTime} seconds!`);
         }
     }
 

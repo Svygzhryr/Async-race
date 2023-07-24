@@ -7,7 +7,7 @@ export default class Winners {
     constructor() {
         this.app = document.querySelector('.app');
         this.menu = document.querySelector('.menu');
-        this.winnersUi = document.createElement('div');
+        this.winnersUi = document.createElement('div') as HTMLElement;
     }
 
     setUp() {
@@ -30,7 +30,38 @@ export default class Winners {
             title.innerHTML = 'Winners';
             this.winnersUi.appendChild(title);
 
-            this.getWinners(title);
+            const page = document.createElement('h3');
+            page.innerHTML = `Page ${1}`;
+            this.winnersUi?.appendChild(page);
+
+            const table = document.createElement('table');
+            table.className = 'winners__table';
+            this.winnersUi?.appendChild(table);
+
+            const signs = document.createElement('tr');
+            table.appendChild(signs);
+
+            const place = document.createElement('th');
+            place.innerHTML = '№';
+            signs.appendChild(place);
+
+            const image = document.createElement('th');
+            image.innerHTML = 'Car image';
+            signs.appendChild(image);
+
+            const name = document.createElement('th');
+            name.innerHTML = 'Name';
+            signs.appendChild(name);
+
+            const wins = document.createElement('th');
+            wins.innerHTML = 'Wins';
+            signs.appendChild(wins);
+
+            const time = document.createElement('th');
+            time.innerHTML = 'Best time';
+            signs.appendChild(time);
+
+            this.getWinners(title, page);
         }
     }
 
@@ -41,15 +72,13 @@ export default class Winners {
         getWinners?.classList.remove('inactive');
     }
 
-    async getWinners(title: Element) {
+    async getWinners(title: Element, page: Element) {
         const response = await fetch('http://127.0.0.1:3000/winners?_page=1&_limit=7');
         const winners = await response.json();
         const items = response.headers.get('X-Total-Count') as string | number;
 
         title.innerHTML = `Winners (${items})`;
-        const page = document.createElement('h3');
         page.innerHTML = `Page ${1}`;
-        this.winnersUi?.appendChild(page);
 
         winners.forEach((winnerData: gotWinners) => {
             const winnersItem = document.createElement('div');

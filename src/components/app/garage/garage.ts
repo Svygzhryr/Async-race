@@ -257,37 +257,29 @@ export default class Garage {
         const cars = this.carsOnPage;
         const promises = [];
         for (let i = 0; i < this.carsOnPage.length; i++) {
-            const promise = new Promise((resolve) => {
+            const promise = new Promise((resolve, reject) => {
                 const id = cars[i].carData.id;
                 const finish = cars[i].startEngine(id, referenceButtons[i] as HTMLElement, isRace);
-                resolve(finish);
+                if (finish) {
+                    resolve(finish);
+                }
+                reject('broken');
             });
             promises.push(promise);
         }
-        console.log(promises);
-        Promise.race(promises).then((value) => {
-            if (value) {
-                console.log(value);
-                const winner = document.createElement('div');
-                winner.className = 'winner-modal';
-                winner.innerHTML = value as string;
-                this.app?.appendChild(winner);
-            }
-        });
-
-        // const car1: Promise<void> = new Promise((resolve) => {
-        //     const id = cars[0].carData.id;
-        //     const finish = cars[0].startEngine(id, referenceButtons[0] as HTMLElement, isRace);
-        //     resolve(finish);
-        // });
-        // const car2: Promise<void> = new Promise((resolve) => {
-        //     const id = cars[1].carData.id;
-        //     const finish = cars[1].startEngine(id, referenceButtons[1] as HTMLElement, isRace);
-        //     resolve(finish);
-        // });
-        // Promise.race([car1, car2]).then((value) => {
-        //     console.log(value);
-        // });
+        Promise.race(promises)
+            .then((value) => {
+                console.log('resolved - ' + value);
+                if (value) {
+                    const winner = document.createElement('div');
+                    winner.className = 'winner-modal';
+                    winner.innerHTML = value as string;
+                    this.app?.appendChild(winner);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     async reset() {
