@@ -4,10 +4,12 @@ export default class Winners {
     app: Element | null;
     menu: Element | null;
     winnersUi: Element | null;
+    winnerNumber: number;
     constructor() {
         this.app = document.querySelector('.app');
         this.menu = document.querySelector('.menu');
         this.winnersUi = document.createElement('div') as HTMLElement;
+        this.winnerNumber = 0;
     }
 
     setUp() {
@@ -31,6 +33,7 @@ export default class Winners {
             this.winnersUi.appendChild(title);
 
             const page = document.createElement('h3');
+            page.className = 'winners__page';
             page.innerHTML = `Page ${1}`;
             this.winnersUi?.appendChild(page);
 
@@ -61,7 +64,7 @@ export default class Winners {
             time.innerHTML = 'Best time';
             signs.appendChild(time);
 
-            this.getWinners(title, page);
+            this.getWinners();
         }
     }
 
@@ -72,20 +75,47 @@ export default class Winners {
         getWinners?.classList.remove('inactive');
     }
 
-    async getWinners(title: Element, page: Element) {
-        const response = await fetch('http://127.0.0.1:3000/winners?_page=1&_limit=7');
+    async getWinners() {
+        const response = await fetch('http://127.0.0.1:3000/winners?_page=1&_limit=10');
         const winners = await response.json();
         const items = response.headers.get('X-Total-Count') as string | number;
+        const title = document.querySelector('.winners__title') as HTMLElement;
+        const page = document.querySelector('.winners__page') as HTMLElement;
 
         title.innerHTML = `Winners (${items})`;
         page.innerHTML = `Page ${1}`;
 
         winners.forEach((winnerData: gotWinners) => {
-            const winnersItem = document.createElement('div');
-            winnersItem.className = 'winners__item';
-            this.winnersUi?.appendChild(winnersItem);
+            this.winnerNumber++;
+            const table = document.querySelector('.winners__table') as HTMLElement;
+            const winnerNumber = this.winnerNumber.toString();
+            const winsString = winnerData.wins++ ?? 1;
+            const winsNumber = winsString.toString();
+            const time = winnerData.time.toString();
 
-            winnersItem.innerHTML = `${winnerData.id} ${winnerData.time} ${winnerData.wins}`;
+            const winnersItem = document.createElement('tr');
+            winnersItem.className = 'winners__item';
+            table.appendChild(winnersItem);
+
+            const number = document.createElement('td');
+            number.innerHTML = winnerNumber;
+            winnersItem.appendChild(number);
+
+            const carImage = document.createElement('td');
+            carImage.innerHTML = '';
+            winnersItem.appendChild(carImage);
+
+            const name = document.createElement('td');
+            name.innerHTML = '';
+            winnersItem.appendChild(name);
+
+            const wins = document.createElement('td');
+            wins.innerHTML = winsNumber;
+            winnersItem.appendChild(wins);
+
+            const bestTime = document.createElement('td');
+            bestTime.innerHTML = time;
+            winnersItem.appendChild(bestTime);
         });
     }
 }

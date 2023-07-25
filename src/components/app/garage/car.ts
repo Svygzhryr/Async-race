@@ -6,11 +6,13 @@ export default class CarItem {
     getCars: () => Promise<void>;
     currentPage: number;
     animation: Animation | null;
+    wins: number;
     constructor(carData: gotCars, getCars: () => Promise<void>, currentPage: number) {
         this.carData = carData;
         this.getCars = getCars;
         this.currentPage = currentPage;
         this.animation = null;
+        this.wins = 0;
     }
 
     initCar(carItems: Element) {
@@ -129,7 +131,15 @@ export default class CarItem {
 
         if (isRace && driveResponse.ok) {
             const finishTime = (duration / 1000).toFixed(2);
-            return `${carName} finished first in <strong>${finishTime}</strong> seconds!`;
+            this.wins++;
+            return [
+                {
+                    id: this.carData.id,
+                    wins: this.wins,
+                    time: finishTime,
+                },
+                `${carName} finished first in <strong>${finishTime}</strong> seconds!`,
+            ];
         }
     }
 

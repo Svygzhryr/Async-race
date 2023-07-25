@@ -1,4 +1,4 @@
-import { gotCars } from '../../interface';
+import { gotCars, gotWinners } from '../../interface';
 import { CAR_MANUFACTURERS, CAR_MODELS } from '../../manufacturers';
 import CarItem from './car';
 
@@ -268,15 +268,29 @@ export default class Garage {
             });
             promises.push(promise);
         }
-        Promise.any(promises).then((value) => {
-            const winner = document.createElement('div');
-            winner.className = 'winner-modal';
-            winner.innerHTML = value as string;
-            this.app?.appendChild(winner);
+        const winnerData = await Promise.any(promises).then((value) => {
+            const dataArray = value as Array<object | string>;
+            const message = dataArray[1] as string;
+            const winnerData = dataArray[0] as gotWinners;
+            const winnerModal = document.createElement('div');
+            winnerModal.className = 'winner-modal';
+            winnerModal.innerHTML = message;
+            this.app?.appendChild(winnerModal);
             setTimeout(() => {
-                winner.remove();
+                winnerModal.remove();
             }, 5000);
+
+            return winnerData;
         });
+
+        const response = await fetch(`http://127.0.0.1:3000/winners`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(winnerData),
+        });
+        console.log(response.json());
     }
 
     async reset() {
