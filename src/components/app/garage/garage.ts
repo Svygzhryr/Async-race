@@ -283,14 +283,17 @@ export default class Garage {
             return winnerData;
         });
 
-        const response = await fetch(`http://127.0.0.1:3000/winners`, {
+        const carBank = document.createElement('div');
+        carBank.style.display = 'none';
+        document.appendChild(carBank);
+
+        await fetch(`http://127.0.0.1:3000/winners`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(winnerData),
         });
-        console.log(response.json());
     }
 
     async reset() {

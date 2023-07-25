@@ -87,6 +87,7 @@ export default class CarItem {
         const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=started`, {
             method: 'PATCH',
         });
+        carElement.style.marginLeft = '0px';
         stopButton.classList.remove('input_inactive');
         // if (response.ok) {
         const carSpecs = await response.json();
@@ -123,10 +124,12 @@ export default class CarItem {
             animation.cancel();
             carElement.style.marginLeft = driven;
             stopButton.classList.add('input_inactive');
+            startButton.classList.remove('input_inactive');
             console.log('Car has been broken!');
             throw new Error('Car has been broken!');
         }
 
+        startButton.classList.remove('input_inactive');
         stopButton.classList.add('input_inactive');
 
         if (isRace && driveResponse.ok) {

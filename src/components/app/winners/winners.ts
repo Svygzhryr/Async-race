@@ -1,4 +1,5 @@
 import { gotWinners } from '../../interface';
+import image from '../../../assets/car_icon.svg';
 
 export default class Winners {
     app: Element | null;
@@ -101,9 +102,11 @@ export default class Winners {
             number.innerHTML = winnerNumber;
             winnersItem.appendChild(number);
 
-            const carImage = document.createElement('td');
-            carImage.innerHTML = '';
-            winnersItem.appendChild(carImage);
+            const carImg = document.createElement('td');
+            carImg.innerHTML = image;
+            carImg.className = 'car';
+            carImg.style.fill = 'white';
+            winnersItem.appendChild(carImg);
 
             const name = document.createElement('td');
             name.innerHTML = '';
