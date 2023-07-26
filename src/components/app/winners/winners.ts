@@ -61,15 +61,12 @@ export default class Winners {
 
     async getWinners(totalCars: Array<CarItem>) {
         this.winnerNumber = 0;
-
         const tw = document.querySelector('.table__wrapper') as HTMLElement;
         tw.innerHTML = '';
 
         const table = document.createElement('table');
         table.className = 'winners__table';
         tw.appendChild(table);
-
-        console.log(table);
 
         const signs = document.createElement('tr');
         table.appendChild(signs);
@@ -105,7 +102,7 @@ export default class Winners {
         // console.log(carsOnPage.find((e) => e.carData.id === winners));
 
         title.innerHTML = `Winners (${items})`;
-        page.innerHTML = `Page ${1}`;
+        page.innerHTML = `Page ${this.currentPage}`;
 
         const prev = document.createElement('button');
         prev.className = 'btn btn_prev';
@@ -114,8 +111,8 @@ export default class Winners {
             const minPages = 1;
             if (this.currentPage > minPages) {
                 this.currentPage--;
+                this.getWinners(totalCars);
             }
-            this.getWinners(totalCars);
         });
         tw.appendChild(prev);
 
@@ -126,15 +123,16 @@ export default class Winners {
             const maxPages = Math.ceil(this.totalItems / 10);
             if (this.currentPage < maxPages) {
                 this.currentPage++;
+                this.getWinners(totalCars);
             }
-            this.getWinners(totalCars);
         });
         tw.appendChild(next);
 
         winners.forEach((winnerData: gotWinners) => {
+            this.winnerNumber++;
             const table = document.querySelector('.winners__table') as HTMLElement;
             const winnerNumber = this.winnerNumber.toString();
-            const winsString = winnerData.wins++ ?? 1;
+            const winsString = winnerData.wins;
             const winsNumber = winsString.toString();
             const time = winnerData.time.toString();
 

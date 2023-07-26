@@ -294,13 +294,33 @@ export default class Garage {
             return winnerData;
         });
 
-        await fetch(`http://127.0.0.1:3000/winners`, {
+        const postWinner = await fetch(`http://127.0.0.1:3000/winners`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(winnerData),
         });
+
+        if (postWinner.status === 500) {
+            const response = await fetch(`http://127.0.0.1:3000/winners/${winnerData.id}`, {
+                method: 'GET',
+            });
+            const lastRecord = await response.json();
+            console.log(lastRecord.wins);
+            const newWins = lastRecord.wins + 1;
+            console.log(newWins);
+            await fetch(`http://127.0.0.1:3000/winners/${winnerData.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    wins: newWins,
+                    time: Math.min(winnerData.time, lastRecord.time),
+                }),
+            });
+        }
 
         await this.winners.getWinners(this.totalCars);
     }
