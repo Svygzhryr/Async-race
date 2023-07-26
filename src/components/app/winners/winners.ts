@@ -7,11 +7,15 @@ export default class Winners {
     menu: Element | null;
     winnersUi: Element | null;
     winnerNumber: number;
+    currentPage: number;
+    totalItems: number;
     constructor() {
         this.app = document.querySelector('.app');
         this.menu = document.querySelector('.menu');
         this.winnersUi = document.createElement('div') as HTMLElement;
         this.winnerNumber = 0;
+        this.currentPage = 1;
+        this.totalItems = 0;
     }
 
     setUp(totalCars: Array<CarItem>) {
@@ -41,32 +45,9 @@ export default class Winners {
             page.innerHTML = `Page ${1}`;
             this.winnersUi?.appendChild(page);
 
-            const table = document.createElement('table');
-            table.className = 'winners__table';
-            this.winnersUi?.appendChild(table);
-
-            const signs = document.createElement('tr');
-            table.appendChild(signs);
-
-            const place = document.createElement('th');
-            place.innerHTML = '№';
-            signs.appendChild(place);
-
-            const image = document.createElement('th');
-            image.innerHTML = 'Car image';
-            signs.appendChild(image);
-
-            const name = document.createElement('th');
-            name.innerHTML = 'Name';
-            signs.appendChild(name);
-
-            const wins = document.createElement('th');
-            wins.innerHTML = 'Wins';
-            signs.appendChild(wins);
-
-            const time = document.createElement('th');
-            time.innerHTML = 'Best time';
-            signs.appendChild(time);
+            const tw = document.createElement('div');
+            tw.className = 'table__wrapper';
+            this.winnersUi?.appendChild(tw);
         }
     }
 
@@ -79,23 +60,78 @@ export default class Winners {
     }
 
     async getWinners(totalCars: Array<CarItem>) {
-        document.querySelectorAll('.winners__item').forEach((e) => {
-            e.remove();
-        });
-        const response = await fetch('http://127.0.0.1:3000/winners?_page=1&_limit=10');
+        this.winnerNumber = 0;
+
+        const tw = document.querySelector('.table__wrapper') as HTMLElement;
+        tw.innerHTML = '';
+
+        const table = document.createElement('table');
+        table.className = 'winners__table';
+        tw.appendChild(table);
+
+        console.log(table);
+
+        const signs = document.createElement('tr');
+        table.appendChild(signs);
+
+        const place = document.createElement('th');
+        place.innerHTML = '№';
+        signs.appendChild(place);
+
+        const carImage = document.createElement('th');
+        carImage.innerHTML = 'Car image';
+        signs.appendChild(carImage);
+
+        const name = document.createElement('th');
+        name.innerHTML = 'Name';
+        signs.appendChild(name);
+
+        const wins = document.createElement('th');
+        wins.innerHTML = 'Wins';
+        signs.appendChild(wins);
+
+        const time = document.createElement('th');
+        time.innerHTML = 'Best time';
+        signs.appendChild(time);
+
+        const response = await fetch(`http://127.0.0.1:3000/winners?_page=${this.currentPage}&_limit=10`);
         const winners = await response.json();
         const items = response.headers.get('X-Total-Count') as string | number;
         const title = document.querySelector('.winners__title') as HTMLElement;
         const page = document.querySelector('.winners__page') as HTMLElement;
-        console.log(winners);
+        const totalCount = response.headers.get('X-Total-Count') as string;
+        this.totalItems = +totalCount;
 
         // console.log(carsOnPage.find((e) => e.carData.id === winners));
 
         title.innerHTML = `Winners (${items})`;
         page.innerHTML = `Page ${1}`;
 
+        const prev = document.createElement('button');
+        prev.className = 'btn btn_prev';
+        prev.innerHTML = '←';
+        prev.addEventListener('click', () => {
+            const minPages = 1;
+            if (this.currentPage > minPages) {
+                this.currentPage--;
+            }
+            this.getWinners(totalCars);
+        });
+        tw.appendChild(prev);
+
+        const next = document.createElement('button');
+        next.className = 'btn btn_next';
+        next.innerHTML = '→';
+        next.addEventListener('click', () => {
+            const maxPages = Math.ceil(this.totalItems / 10);
+            if (this.currentPage < maxPages) {
+                this.currentPage++;
+            }
+            this.getWinners(totalCars);
+        });
+        tw.appendChild(next);
+
         winners.forEach((winnerData: gotWinners) => {
-            this.winnerNumber++;
             const table = document.querySelector('.winners__table') as HTMLElement;
             const winnerNumber = this.winnerNumber.toString();
             const winsString = winnerData.wins++ ?? 1;

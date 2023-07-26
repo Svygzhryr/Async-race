@@ -129,6 +129,10 @@ export default class Garage {
         const response = await fetch(`http://127.0.0.1:3000/garage?_page=${this.currentPage}&_limit=${carsPerPage}`, {
             method: 'GET',
         });
+        // const everyCar = await fetch(`http://127.0.0.1:3000/garage`, {
+        //     method: 'GET',
+        // });
+        // const allCars = await everyCar.json();
         const responseIds = await fetch(`http://127.0.0.1:3000/garage`, {
             method: 'GET',
         });
@@ -177,8 +181,8 @@ export default class Garage {
 
         cars.forEach((e: gotCars) => {
             const car = new CarItem(e, this.getCars, this.currentPage);
-            this.carsOnPage.push(car);
             this.totalCars.push(car);
+            this.carsOnPage.push(car);
             car.initCar(carItems);
         });
     }
@@ -268,7 +272,6 @@ export default class Garage {
             const promise = new Promise((resolve, reject) => {
                 const id = cars[i].carData.id;
                 const finish = cars[i].startEngine(id, referenceButtons[i] as HTMLElement, isRace);
-                console.log(finish);
                 if (finish) {
                     resolve(finish);
                 }
