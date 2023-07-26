@@ -1,5 +1,4 @@
 import Garage from './garage/garage';
-import Winners from './winners/winners';
 
 class App {
     constructor() {}
@@ -14,9 +13,7 @@ class App {
         app.appendChild(menu);
 
         const garage = new Garage();
-        const winners = new Winners();
         garage.setUp();
-        winners.setUp();
     }
 }
 

@@ -1,5 +1,6 @@
 import { gotWinners } from '../../interface';
 import image from '../../../assets/car_icon.svg';
+import CarItem from '../garage/car';
 
 export default class Winners {
     app: Element | null;
@@ -13,14 +14,16 @@ export default class Winners {
         this.winnerNumber = 0;
     }
 
-    setUp() {
+    setUp(totalCars: Array<CarItem>) {
         const winners = document.createElement('button');
         winners.className = 'btn_winners btn';
         winners.innerHTML = 'Winners';
         this.menu?.appendChild(winners);
         this.winnersView();
 
-        winners.addEventListener('click', this.winnersSelect);
+        winners.addEventListener('click', () => {
+            this.winnersSelect(totalCars);
+        });
     }
 
     winnersView() {
@@ -64,24 +67,29 @@ export default class Winners {
             const time = document.createElement('th');
             time.innerHTML = 'Best time';
             signs.appendChild(time);
-
-            this.getWinners();
         }
     }
 
-    winnersSelect() {
+    winnersSelect(totalCars: Array<CarItem>) {
         const getGarage = document.querySelector('.garage-wrapper');
         const getWinners = document.querySelector('.winners-wrapper');
         getGarage?.classList.add('inactive');
         getWinners?.classList.remove('inactive');
+        this.getWinners(totalCars);
     }
 
-    async getWinners() {
+    async getWinners(totalCars: Array<CarItem>) {
+        document.querySelectorAll('.winners__item').forEach((e) => {
+            e.remove();
+        });
         const response = await fetch('http://127.0.0.1:3000/winners?_page=1&_limit=10');
         const winners = await response.json();
         const items = response.headers.get('X-Total-Count') as string | number;
         const title = document.querySelector('.winners__title') as HTMLElement;
         const page = document.querySelector('.winners__page') as HTMLElement;
+        console.log(winners);
+
+        // console.log(carsOnPage.find((e) => e.carData.id === winners));
 
         title.innerHTML = `Winners (${items})`;
         page.innerHTML = `Page ${1}`;
@@ -105,11 +113,20 @@ export default class Winners {
             const carImg = document.createElement('td');
             carImg.innerHTML = image;
             carImg.className = 'car';
-            carImg.style.fill = 'white';
+            totalCars.find((e) => {
+                if (e.carData.id == winnerData.id) {
+                    carImg.style.fill = e.carData.color;
+                }
+            });
             winnersItem.appendChild(carImg);
 
             const name = document.createElement('td');
-            name.innerHTML = '';
+            totalCars.find((e) => {
+                if (e.carData.id == winnerData.id) {
+                    name.innerHTML = e.carData.name;
+                }
+            });
+
             winnersItem.appendChild(name);
 
             const wins = document.createElement('td');

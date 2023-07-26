@@ -1,5 +1,6 @@
 import { gotCars, gotWinners } from '../../interface';
 import { CAR_MANUFACTURERS, CAR_MODELS } from '../../manufacturers';
+import Winners from '../winners/winners';
 import CarItem from './car';
 
 export default class Garage {
@@ -10,6 +11,8 @@ export default class Garage {
     totalItems: number;
     carsIds: Array<number>;
     carsOnPage: Array<CarItem>;
+    totalCars: Array<CarItem>;
+    winners: Winners;
     constructor() {
         this.app = document.querySelector('.app');
         this.menu = document.querySelector('.menu');
@@ -18,6 +21,8 @@ export default class Garage {
         this.currentPage = 1;
         this.totalItems = 1;
         this.carsOnPage = [];
+        this.totalCars = [];
+        this.winners = new Winners();
     }
 
     setUp() {
@@ -25,6 +30,8 @@ export default class Garage {
         garage.className = 'btn_garage btn';
         garage.innerHTML = 'Garage';
         this.menu?.appendChild(garage);
+
+        this.winners.setUp(this.totalCars);
 
         this.garageView();
 
@@ -171,6 +178,7 @@ export default class Garage {
         cars.forEach((e: gotCars) => {
             const car = new CarItem(e, this.getCars, this.currentPage);
             this.carsOnPage.push(car);
+            this.totalCars.push(car);
             car.initCar(carItems);
         });
     }
@@ -283,10 +291,6 @@ export default class Garage {
             return winnerData;
         });
 
-        const carBank = document.createElement('div');
-        carBank.style.display = 'none';
-        document.appendChild(carBank);
-
         await fetch(`http://127.0.0.1:3000/winners`, {
             method: 'POST',
             headers: {
@@ -294,6 +298,8 @@ export default class Garage {
             },
             body: JSON.stringify(winnerData),
         });
+
+        await this.winners.getWinners(this.totalCars);
     }
 
     async reset() {
